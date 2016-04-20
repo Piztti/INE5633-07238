@@ -4,25 +4,40 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 
+/**
+ *
+ * Define a heuristica usada no algoritmo A*.
+ *
+ */
 public class Heuristic {
 
     private final Float playCost = 1f;
     private Rules rules;
     private String report = "";
 
-    Integer timesManhattanUsed = 0;
-    Integer timesCartesianUsed = 0;
-
+    /**
+     *
+     * Monta a heurística usando uma regra.
+     *
+     * @param rules
+     */
     public Heuristic(Rules rules) {
         this.rules = rules;
     }
 
+
+    /**
+     *
+     * Resolve o tabuleiro passado usando A*.
+     * A estrutura de dados da fronteira é uma {@link PriorityQueue}.
+     *
+     * @param initialBoard
+     * @return
+     * @throws Exception
+     */
     public Boolean solve(Board initialBoard) throws Exception {
 
         Instant start = Instant.now();
-
-        timesManhattanUsed = 0;
-        timesCartesianUsed = 0;
 
         Node rootNode = new Node(initialBoard, null, boardCost(initialBoard), 0f);
         Set<Board> generatedStates = new HashSet<>();
@@ -85,48 +100,36 @@ public class Heuristic {
         return found;
     }
 
+    /**
+     *
+     * Retorna o custo de um tabuleiro.
+     *
+     * @param board
+     * @return
+     */
     public Float boardCost(Board board) {
         Float cost = 0f;
 
         cost = board.getBoard()
                 .stream()
                 .map(piece -> {
-                    Float cartesianCost = estimateCartesianMoveCost(piece, board.getBoard().indexOf(piece));
                     Float manhattanCost = estimateManhattanMoveCost(piece, board.getBoard().indexOf(piece));
-                    Float estimate = 0f;
-                    if(cartesianCost == manhattanCost){
-                        estimate = cartesianCost;
-                        this.timesCartesianUsed++;
-                        this.timesManhattanUsed++;
-                    }
-                    if(cartesianCost > manhattanCost){
-                        estimate = cartesianCost;
-                        this.timesCartesianUsed++;
-                    } else {
-                        estimate = manhattanCost;
-                        this.timesManhattanUsed++;
-                    }
-                    return estimate;
+                    return manhattanCost;
                 })
                 .reduce((c1, c2) -> c1 + c2).get();
 
         return cost;
     }
 
-    private Float estimateCartesianMoveCost(Integer piece, Integer index) {
-        Float estimate = 0f;
 
-        Position currentPosition = rules.boardCoordinates().get(index);
-        Position finalPosition = rules.boardCoordinates().get(rules.getFinalPosition().getBoard().indexOf(piece));
-
-        Double a = Math.pow(currentPosition.getX() - finalPosition.getX(), 2);
-        Double b = Math.pow(currentPosition.getY() - finalPosition.getY(), 2);
-
-        estimate = (new Double(Math.sqrt(a + b))).floatValue();
-
-        return estimate;
-    }
-
+    /**
+     *
+     * Estima o custo Manhattan da peça informada de acordo com sua posiçao atual.
+     *
+     * @param piece
+     * @param index
+     * @return
+     */
     private Float estimateManhattanMoveCost(Integer piece, Integer index) {
         Integer estimate = 0;
 
@@ -141,6 +144,16 @@ public class Heuristic {
         return estimate.floatValue();
     }
 
+    /**
+     *
+     * Mostra o relatório do jogo resolvido.
+     *
+     * @param maxElementsOpen
+     * @param iterarions
+     * @param visitedCount
+     * @param execDuration
+     * @param finalNode
+     */
     private void printResult(Integer maxElementsOpen, Integer iterarions,
                              int visitedCount, Duration execDuration, Node finalNode) {
 
@@ -177,16 +190,18 @@ public class Heuristic {
                 .append(System.lineSeparator())
 
                 .append("Total de jogadas: ").append(plays.size())
-                .append(System.lineSeparator())
-                .append("Uso Manhatan: ").append(new Float(timesManhattanUsed))
-                .append(System.lineSeparator())
-                .append("Uso Cartesiano: ").append(new Float(timesCartesianUsed))
                 .append(System.lineSeparator());
 
         report = sb.toString();
 
     }
 
+    /**
+     *
+     * Relatório do jogo resolvido.
+     *
+     * @return
+     */
     public String getReport() {
         return report;
     }

@@ -1,5 +1,10 @@
 package br.ufsc.inf.sin.game;
 
+
+/**
+ * Classe de suporte. É usada na expansão da árvore de estados, guardando a
+ * referência para o tabuleiro, seu nodo pai os custos da heurística e do caminho até ela.
+ */
 public class Node implements Comparable {
     private Board boardRef;
     private Node parent;
@@ -48,6 +53,14 @@ public class Node implements Comparable {
         this.pathCost = pathCost;
     }
 
+    /**
+     *
+     * Override destinado à ordenação na PriorityQueue a fim de sempre
+     * resgatar o nodo de menor custo da fronteira.
+     *
+     * @param node
+     * @return
+     */
     @Override
     public int compareTo(Object node) {
         Node toCompare = (Node) node;

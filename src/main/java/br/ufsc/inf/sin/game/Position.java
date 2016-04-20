@@ -1,5 +1,11 @@
 package br.ufsc.inf.sin.game;
 
+
+/**
+ *
+ * Destinada a identificar a peça no tabuleiro. É a "casa" no tabueiro
+ *
+ */
 public class Position {
     private Integer x;
     private Integer y;

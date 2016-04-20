@@ -2,6 +2,11 @@ package br.ufsc.inf.sin.game;
 
 import java.util.List;
 
+/**
+ *
+ * Lógica de interface
+ *
+ */
 public class Game {
     Board initialBoard = new Board();
     Board finalBoard = new Board(1, 2, 3, 4, 0, 5, 6, 7, 8);

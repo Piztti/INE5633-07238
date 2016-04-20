@@ -3,6 +3,13 @@ package br.ufsc.inf.sin.game;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ *
+ * Esta classe guarda as peças e a organização no tabuleiro.
+ * Serve como estado a ser expandido pela heurística.
+ *
+ */
 public class Board {
 
     private List<Integer> board = new ArrayList<>();
@@ -11,6 +18,13 @@ public class Board {
         addFromArray(pieces);
     }
 
+    /**
+     *
+     * Constrói a classe usando uma string com as peças.
+     *
+     * @param pieces
+     * @throws Exception
+     */
     public Board(String pieces) throws Exception {
         String[] piecesString = pieces.split(",");
         Integer[] piecesInteger = new Integer[piecesString.length];
@@ -20,6 +34,14 @@ public class Board {
         addFromArray(piecesInteger);
     }
 
+    /**
+     *
+     * Monta um tabuleiro a partir de um array de peças representadas por números.
+     * Deve conter peças distintas.
+     *
+     * @param pieces
+     * @throws Exception
+     */
     private void addFromArray(Integer[] pieces) throws Exception {
         for (int i = 0; i<pieces.length; i++){
             if(board.contains(pieces[i])){

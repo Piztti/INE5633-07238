@@ -3,6 +3,10 @@ package br.ufsc.inf.sin.game;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * Define as regras do jogo e os comportamentos válidos em jogadas.
+ */
 public class Rules {
 
     static final Integer blankPiece = 0;
@@ -12,6 +16,13 @@ public class Rules {
 
     private List<Position> positions;
 
+    /**
+     *
+     * Monta as regras do jogo a patir do tabuleiro final indicado
+     *
+     * @param finalPosition
+     * @throws Exception
+     */
     public Rules(Board finalPosition) throws Exception {
 
         boardSize = finalPosition.getBoard().size();
@@ -21,6 +32,13 @@ public class Rules {
         this.finalPosition = finalPosition;
     }
 
+    /**
+     *
+     * Codifica as posições do tabuleiro de acordo com o tamanho.
+     *
+     * @param finalPosition
+     * @throws Exception
+     */
     private void layoutPositions(Board finalPosition) throws Exception {
         Integer targetSize = finalPosition.getBoard().size();
         Double sizeSides = Math.sqrt(finalPosition.getBoard().size());
@@ -41,6 +59,14 @@ public class Rules {
         }
     }
 
+    /**
+     *
+     * Gera tabuleiros com as opções válidas de movimentos a partir do indicado.
+     *
+     * @param board
+     * @return
+     * @throws Exception
+     */
     public List<Board> validMoves(Board board) throws Exception {
         List<Board> validMoves = new ArrayList<>();
         Integer boardBlankIndex = board.getBoard().indexOf(blankPiece);
@@ -65,6 +91,19 @@ public class Rules {
         return validMoves;
     }
 
+    /**
+     *
+     * Troca a peça branca com outra.
+     * Usada no método que retorna tabuleiros com movimentos válidos.
+     *
+     * @param x
+     * @param y
+     * @param blankPosition
+     * @param boardBlankIndex
+     * @param board
+     * @return
+     * @throws Exception
+     */
     private Board swap(Integer x, Integer y, Position blankPosition, Integer boardBlankIndex, Board board) throws Exception {
         Integer[] targetBoard = new Integer[board.getBoard().size()];
         targetBoard = board.getBoard().toArray(targetBoard);
@@ -81,10 +120,22 @@ public class Rules {
         return new Board(targetBoard);
     }
 
+    /**
+     *
+     * Retorna as coordenadas geradas pela regra.
+     *
+     * @return
+     */
     public List<Position> boardCoordinates(){
         return positions;
     }
 
+    /**
+     *
+     * Retorna a posição final usada pela regra.
+     *
+     * @return
+     */
     public Board getFinalPosition() {
         return finalPosition;
     }

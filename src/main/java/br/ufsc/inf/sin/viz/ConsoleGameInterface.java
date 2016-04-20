@@ -8,7 +8,9 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 /**
- * Created by daniel on 02/04/16.
+ *
+ * Classe de suporte a interface.
+ *
  */
 public class ConsoleGameInterface {
     Scanner input;
