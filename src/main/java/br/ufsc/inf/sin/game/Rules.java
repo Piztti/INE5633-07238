@@ -139,4 +139,14 @@ public class Rules {
     public Board getFinalPosition() {
         return finalPosition;
     }
+
+    /**
+     *
+     * Retorna o número máximo de linhas e colunas
+     *
+     * @return
+     */
+    public Integer getMaxXY() {
+        return maxXY;
+    }
 }

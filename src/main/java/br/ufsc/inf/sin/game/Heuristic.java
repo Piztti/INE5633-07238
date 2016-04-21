@@ -40,11 +40,9 @@ public class Heuristic {
         Instant start = Instant.now();
 
         Node rootNode = new Node(initialBoard, null, boardCost(initialBoard), 0f);
-        Set<Board> generatedStates = new HashSet<>();
         Set<Node> closed = new HashSet<>();
         Queue<Node> open = new PriorityQueue<>();
 
-        generatedStates.add(initialBoard);
         open.add(rootNode);
 
         Integer maxOpen = 0;
@@ -72,10 +70,9 @@ public class Heuristic {
             rules.validMoves(currentNode.getBoardRef())
                     .stream()
                     .forEach(board -> {
-                        if (!generatedStates.contains(board)
-                                && (boardCost(currentNode.getBoardRef()) + currentNode.getPathCost()) >= (boardCost(board))) {
-                            generatedStates.add(board);
-                            open.add(new Node(board, currentNode, boardCost(board), currentNode.getPathCost() + playCost));
+                        Node node = new Node(board, currentNode, boardCost(board), currentNode.getPathCost() + playCost);
+                        if (!closed.contains(node) && !open.contains(node)){
+                            open.add(node);
                         }
                     });
 
@@ -110,6 +107,8 @@ public class Heuristic {
     public Float boardCost(Board board) {
         Float cost = 0f;
 
+        linePermutations(board);
+
         cost = board.getBoard()
                 .stream()
                 .map(piece -> {
@@ -142,6 +141,57 @@ public class Heuristic {
         estimate = a+b;
 
         return estimate.floatValue();
+    }
+
+    /**
+     *
+     * Retorna o número de peças que tem posição final na sua
+     * linha mas devem "pular" outra peça nas mesmas condições
+     *
+     * @param board
+     * @return
+     */
+    private Integer linePermutations(Board board) {
+        Integer n = 0;
+
+        Map<Integer, Integer> conflictingPositinons = new HashMap<>();
+
+        for (int lineNumber = 0; lineNumber <= rules.getMaxXY() ; lineNumber++) {
+            Integer lineIndex = lineNumber + lineNumber * rules.getMaxXY();
+
+            conflictingPositinons.clear();
+            for (int pieceIndex = lineNumber + lineNumber * rules.getMaxXY(); pieceIndex < lineIndex + rules.getMaxXY()+1; pieceIndex++) {
+
+                Integer piece = board.getBoard().get(pieceIndex);
+                Integer pieceFinalIndex = rules.getFinalPosition().getBoard().indexOf(piece);
+
+                Position currentPosition = rules.boardCoordinates().get(pieceIndex);
+                Position finalPosition = rules.boardCoordinates().get(pieceFinalIndex);
+                if(finalPosition.getX() == finalPosition.getX()){
+                    conflictingPositinons.put(pieceIndex, pieceFinalIndex);
+                }
+            }
+
+            if(conflictingPositinons.size()>1){
+                conflictingPositinons.forEach((currentIndex0, finalIndex0) -> {
+                    conflictingPositinons.forEach((currentIndexN, finalIndexN) -> {
+                        if(currentIndexN!=currentIndex0){
+
+                        }
+                    });
+                });
+            }
+        }
+
+//        Position currentPosition = rules.boardCoordinates().get(index);
+//        Position finalPosition = rules.boardCoordinates().get(rules.getFinalPosition().getBoard().indexOf(piece));
+//
+//        Integer a = Math.abs(currentPosition.getX() - finalPosition.getX());
+//        Integer b = Math.abs(currentPosition.getY() - finalPosition.getY());
+//
+//        estimate = a+b;
+
+        return n;
     }
 
     /**
